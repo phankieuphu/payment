@@ -1,0 +1,49 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_READ_URL=postgres://postgres:postgres@db:5432/postgres
+      - DATABASE_WRITE_URL=postgres://postgres:postgres@db:5433/postgres
+    depends_on:
+      - db-read
+      - db-write
+      - cache
+  db-read:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=payment
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-read:/var/lib/postgresql/data
+  db-write:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=payment
+    ports:
+      - "5433:5432"
+    volumes:
+      - db-write:/var/lib/postgresql/data
+  cache:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./:/src
+volumes:
+  db-read:
+    driver: local
+  db-write:
+    driver: local
+  cache:
+    driver: local
