@@ -1,23 +1,20 @@
-# Use Golang official image
+# Start from the official Go image
 FROM golang:1.22.4
 
-# Set the working directory
-WORKDIR /app
+# Set the working directory inside the container
+WORKDIR /
 
-# Copy go.mod and go.sum from the src directory
-COPY src/go.mod src/go.sum ./
+# Copy the source code into the container
+COPY . .
 
-# Download dependencies
+# Clean
+
+  # Install dependencies and build the application
 RUN go mod download
+RUN go build -o main .
 
-# Copy the rest of the application code from the src directory
-COPY src/ ./
-
-# Build the application
-RUN go build -o src/main .
-
-# Expose port
+# Expose the application port
 EXPOSE 8080
 
-# Run the application
-CMD ["src/main"]
+# Command to run the application
+CMD ["./main"]
