@@ -5,12 +5,16 @@ FROM golang:1.22.4
 WORKDIR /
 
 # Copy the source code into the container
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+
 COPY . .
 
 # Clean
 
   # Install dependencies and build the application
-RUN go mod download
 RUN go build -o main .
 
 # Expose the application port

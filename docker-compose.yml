@@ -9,34 +9,42 @@ services:
     # volumes:
     #   - .:
     environment:
-      - DATABASE_READ_URL=postgres://postgres:postgres@db:5432/postgres
-      - DATABASE_WRITE_URL=postgres://postgres:postgres@db:5433/postgres
+      - DATABASE_READ_URL=root:rootpassword@tcp(db-read:3307)/payment?charset=utf8mb4&parseTime=True&loc=Local
+      - DATABASE_WRITE_URL=root:rootpassword@tcp(db-write:3306)/payment?charset=utf8mb4&parseTime=True&loc=Local
+    networks:
+      - app-network
     depends_on:
       - db-read
       - db-write
       - cache
   db-read:
     container_name: db-read
-    image: postgres:13
+    image: mysql:8
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=payment
+      - MYSQL_USER=readuser
+      - MYSQL_PASSWORD=readpassword
+      - MYSQL_DATABASE=payment
+      - MYSQL_ROOT_PASSWORD=rootpassword
     ports:
-      - "5432:5432"
+      - "3307:3306"
     volumes:
-      - db-read:/var/lib/postgresql/data
+      - ./.mysql/mysql_data_read:/var/lib/mysql
+    networks:
+      - app-network
   db-write:
     container_name: db-write
-    image: postgres:13
+    image: mysql:8
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=payment
+      - MYSQL_USER=writeuser
+      - MYSQL_PASSWORD=writepassword
+      - MYSQL_DATABASE=payment
+      - MYSQL_ROOT_PASSWORD=rootpassword
     ports:
-      - "5433:5432"
+      - "3306:3306"
     volumes:
-      - db-write:/var/lib/postgresql/data
+      - ./.mysql/mysql_data_write:/var/lib/mysql
+    networks:
+      - app-network
   cache:
     container_name: cache
     image: redis:7
@@ -51,3 +59,7 @@ volumes:
     driver: local
   cache:
     driver: local
+networks:
+  app-network:
+    driver: bridge
+
