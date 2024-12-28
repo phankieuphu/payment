@@ -10,5 +10,6 @@ func SetupRouter(router *gin.Engine) {
 	account := router.Group("/account")
 	{
 		account.GET("/information", service.GetAccountInformation)
+		account.POST("/create", service.CreateAccount)
 	}
 }

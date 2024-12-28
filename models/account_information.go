@@ -12,3 +12,7 @@ type AccountAddressInformation struct {
 	UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 	Account   Account   `gorm:"foreignKey:AccountID" json:"account"`
 }
+
+func (a *AccountAddressInformation) TableName() string {
+	return "account_address_information"
+}
