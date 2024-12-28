@@ -9,7 +9,7 @@ services:
     # volumes:
     #   - .:
     environment:
-      - DATABASE_READ_URL=root:rootpassword@tcp(db-read:3307)/payment?charset=utf8mb4&parseTime=True&loc=Local
+      - DATABASE_READ_URL=root:rootpassword@tcp(db-read:3306)/payment?charset=utf8mb4&parseTime=True&loc=Local
       - DATABASE_WRITE_URL=root:rootpassword@tcp(db-write:3306)/payment?charset=utf8mb4&parseTime=True&loc=Local
     networks:
       - app-network
@@ -29,6 +29,7 @@ services:
       - "3307:3306"
     volumes:
       - ./.mysql/mysql_data_read:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
   db-write:
@@ -43,6 +44,7 @@ services:
       - "3306:3306"
     volumes:
       - ./.mysql/mysql_data_write:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
   cache:

@@ -28,7 +28,7 @@ func InitWriteDB() {
 	fmt.Println(dsn)
 	dbInstance, dbError = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if dbError != nil {
-		panic("Failed to connect to database")
+		log.Print("Failed to connect to database")
 	}
 	log.Print("Write database connected")
 }

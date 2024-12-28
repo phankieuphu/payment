@@ -15,3 +15,7 @@ type Account struct {
 	AccountInformation []AccountAddressInformation `gorm:"foreignKey:AccountID" json:"account_information"`
 	Transactions       []Transaction               `gorm:"foreignKey:FromAccountID" json:"transactions"`
 }
+
+func (a *Account) TableName() string {
+	return "accounts"
+}
