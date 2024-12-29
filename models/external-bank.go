@@ -12,3 +12,7 @@ type ExternalBank struct {
 
 	Transactions []Transaction `gorm:"foreignKey:ExternalBankID" json:"transactions"`
 }
+
+func (e *ExternalBank) TableName() string {
+	return "external_banks"
+}

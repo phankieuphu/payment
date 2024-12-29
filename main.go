@@ -13,6 +13,7 @@ func main() {
 	router := gin.Default()
 
 	routers.SetupRouter(router)
+	routers.ExternalBankRouter(router)
 
 	router.Run(":8080")
 }
